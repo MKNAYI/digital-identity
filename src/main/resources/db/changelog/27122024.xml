@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="27122024-1" author="amit">
+
+        <!-- Precondition to check if the table already exists -->
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="user_social_link"/>
+        </preConditions>
+        <!-- Add new colum into user_social_link-->
+        <addColumn tableName="user_social_link">
+            <column name="linkedin_url" type="varchar(1000)">
+            <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

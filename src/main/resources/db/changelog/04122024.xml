@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Changeset to create a new user table -->
+    <changeSet id="04122024-1" author="amit">
+
+        <!-- Precondition to check if the table already exists -->
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="platform" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="image" type="VARCHAR(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="full_name" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="gender" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="nationality" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="state" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="country" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="issued_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="expiration_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="document_type" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="birth_date" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="account_type" type="VARCHAR(20)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="verified_on" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Changeset to create a user_social_link table -->
+    <changeSet id="04122024-2" author="amit">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_social_link"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="user_social_link">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="facebook_url" type="VARCHAR(1000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="instagram_url" type="VARCHAR(1000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="twitter_url" type="VARCHAR(1000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="tiktok_url" type="VARCHAR(1000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="snapchat_url" type="VARCHAR(1000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Add foreign key constraint between user_social_link and user -->
+        <addForeignKeyConstraint
+                baseTableName="user_social_link"
+                baseColumnNames="user_id"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                constraintName="fk_user_social_link_user"
+                deferrable="false"
+                initiallyDeferred="false"/>
+    </changeSet>
+
+    <!-- Changeset to create a user_subscription table -->
+    <changeSet id="04122024-3" author="amit">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_subscription"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="user_subscription">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_provider_subscription_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_provider_product_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="payment_method_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cancellation_reason" type="VARCHAR(2000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Add foreign key constraint to link to the user table -->
+        <addForeignKeyConstraint
+                baseTableName="user_subscription"
+                baseColumnNames="user_id"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                constraintName="fk_user_subscription_user"/>
+    </changeSet>
+
+    <!-- Changeset to create a user_verification table -->
+    <changeSet id="04122024-4" author="amit">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_verification_link"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="user_verification_link">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="public_link_url" type="VARCHAR(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="qr_link_url" type="VARCHAR(500)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Add foreign key constraint to link to the user table -->
+        <addForeignKeyConstraint
+                baseTableName="user_verification_link"
+                baseColumnNames="user_id"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                constraintName="fk_user_verification_link_user"/>
+    </changeSet>
+
+    <!-- Changeset to create a transaction table -->
+    <changeSet id="04122024-5" author="amit">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="transaction"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="transaction">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_subscription_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_method_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="transaction_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_provider_transaction_id" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="start_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Add foreign key constraints to link to the user and user_subscription tables -->
+        <addForeignKeyConstraint
+                baseTableName="transaction"
+                baseColumnNames="user_id"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                constraintName="fk_transaction_user"/>
+
+        <addForeignKeyConstraint
+                baseTableName="transaction"
+                baseColumnNames="user_subscription_id"
+                referencedTableName="user_subscription"
+                referencedColumnNames="id"
+                constraintName="fk_transaction_user_subscription"/>
+    </changeSet>
+
+    <!-- Changeset to create a user_preference table -->
+    <changeSet id="04122024-6" author="amit">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_preference"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="user_preference">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="display_personal" type="boolean" defaultValue="true">
+                <constraints nullable="true"/>
+            </column>
+            <column name="display_social" type="boolean" defaultValue="true">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Add foreign key constraint to link to the user table -->
+        <addForeignKeyConstraint
+                baseTableName="user_preference"
+                baseColumnNames="user_id"
+                referencedTableName="user"
+                referencedColumnNames="id"
+                constraintName="fk_user_preference_user"/>
+    </changeSet>
+
+
+</databaseChangeLog>

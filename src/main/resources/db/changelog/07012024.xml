@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="07012024-1" author="amit">
+
+        <!-- Precondition to check if the table already exists -->
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="transaction"/>
+        </preConditions>
+        <!-- Add new colum into transaction-->
+        <addColumn tableName="transaction">
+            <column name="webhook_event_type" type="varchar(255)">
+            <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="transaction">
+            <column name="payment_provider_subscription_status" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="transaction">
+            <column name="payment_provider_invoice_status" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="07012024-2" author="amit">
+        <!-- Check if the transaction table exists -->
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="transaction"/>
+                <columnExists tableName="transaction" columnName="transaction_type"/>
+            </and>
+        </preConditions>
+        <!-- Remove the column -->
+        <dropColumn tableName="transaction" columnName="transaction_type"/>
+    </changeSet>
+</databaseChangeLog>
